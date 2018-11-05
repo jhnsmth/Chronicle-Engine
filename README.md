@@ -98,7 +98,7 @@ class UserProfile {
 ### Reactive Notification of changes
 As seen in the previous example, you can subscribe to change to a map.  If you need more details, you can subscribe to MapEvent(s)
 
-```
+```java
 Subscriber<TopologicalEvent> topSubscriber = e -> System.out.println("The tree has changed "+e);
 registerSubscriber("/group1/sub-group",  TopologicalEvent.class, topSubscriber);
 
@@ -131,7 +131,7 @@ map.remove("one"));
 ### Data View Virtualisation
 The same data store can can access in multiple ways to suit the use case of the Developer.  Say a user case is pub/sub but we want the latest value.
 
-```
+```java
 // setup the publisher for different topics.
 TopicPublisher<String, String> pub = acquireTopicPublisher("/group1/sub-group/map", String.class, String.class);
 
@@ -196,7 +196,7 @@ First create the directory to which you want to mount
 ```
 sudo mkdir /engine
 ```
-####Then on Linux
+#### Then on Linux
 ```  
 sudo mount -t nfs localhost:/ /engine
 ```  
@@ -208,13 +208,13 @@ You need to install nfs-common which you do as below:
 ```
 apt-get install nfs-common
 ```
-####Or if you are on a Mac OSX:
+#### Or if you are on a Mac OSX:
 ```
 mount -o vers=4 localhost:/ /mnt
 ```
 You should eject the mounted directory before killing the server.
 
-####Or if you are on Windows:
+#### Or if you are on Windows:
 You will need to an nfs4 client or use Microsoft service for unix and use nfsv3
 
 the following example creates an entry containg key=hello value=world in the asset called /temp
@@ -232,35 +232,35 @@ $sudo umount /engine
 
 ### In chronicle-Engine - you can call an arbitrary lambda or predefined function
 
-for example
+For example
 
-   List<Key> keys = ...
-   List<Value> values = map.applyTo(m -> {
-       List<Value> values = new ArrayList<>();
-       for(Key k : keys)
-            values.add(map.get(k));
-       return values;
-   });
+```java
+List<Key> keys = ...
+List<Value> values = map.applyTo(m -> {
+    List<Value> values = new ArrayList<>();
+    for(Key k : keys)
+         values.add(map.get(k));
+    return values;
+});
+```
 
-Instead of using a lambda you can define an `enum` of predefined functions, see
-
-https://github.com/OpenHFT/Chronicle-Engine/blob/master/src/main/java/net/openhft/chronicle/engine/map/remote/MapFunction.java
+Instead of using a lambda you can define an `enum` of predefined functions, [see](https://github.com/OpenHFT/Chronicle-Engine/blob/master/src/main/java/net/openhft/chronicle/engine/map/remote/MapFunction.java).
 
 We also have a function for querying and/or updating either an individual
 entry, or the map as whole remote.
 
 Note: update is asynchronous by default so it acts like a pipelined
-request. Some more are defined here
-
-https://github.com/OpenHFT/Chronicle-Engine/blob/master/src/main/java/net/openhft/chronicle/engine/map/remote/MapUpdate.java
+request. Some more are defined [here](https://github.com/OpenHFT/Chronicle-Engine/blob/master/src/main/java/net/openhft/chronicle/engine/map/remote/MapUpdate.java)
 
 You can send a number of asynchronous calls and wait for a synchronous one.
 A simple example is put which is asynchronous by default.
 
-    map.put(key1, value1); // async
-    map.put(key2, value2); // async
-    map.put(key3, value3); // async
-    map.size(); // sync
+```java
+map.put(key1, value1); // async
+map.put(key2, value2); // async
+map.put(key3, value3); // async
+map.size(); // sync
+```
 
 As size() is synchronous it must wait for the asynchronous calls to
 complete before returning it's result.
@@ -274,15 +274,17 @@ available.
 
 Chroncile engine, by default creates some system maps/queue that you can subsribe to get get an idea about whats going on in your system.
 
--       Users connected
--       Data flowing rates
--       Engine status
+- Users connected
+- Data flowing rates
+- Engine status
 
 subscribing to the following URL's will give you some of this information, 
 
-/proc/connections/cluster/throughput/" + localIdentifier  // Queue <NetworkStats>
-/proc/connections/cluster/connectivity          //  Map<ConnectionDetails,ConnectionStatus)
-/proc/connections/handlers                      //  Map<SocketChannel,TcpHandler)
+```
+/proc/connections/cluster/throughput/" + localIdentifier  // Queue<NetworkStats>
+/proc/connections/cluster/connectivity                    // Map<ConnectionDetails,ConnectionStatus>
+/proc/connections/handlers                                // Map<SocketChannel,TcpHandler>
+```
 
 ### Question
 
@@ -319,8 +321,3 @@ You would have to implement your own locking strategy as atomicity across multip
  currently implemented.
 
 More details to come.
-
-
-
-[![Alt text](https://img.youtube.com/vi/VID/0.jpg)](https://vimeo.com/189273680)
-
